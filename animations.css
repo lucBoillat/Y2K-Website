@@ -1,0 +1,49 @@
+@charset "UTF-8";
+
+.magictime {
+            animation-duration: 0.3s;
+            animation-fill-mode: forwards;
+}
+
+.color-change-timing {
+            animation-duration: 0.8s;
+            animation-delay: 3s;
+            animation-fill-mode: forwards;
+
+}
+
+.color-change {
+  animation-name: color-change;
+
+}
+
+.puffIn {
+          animation-name: puffIn;
+}
+
+@keyframes puffIn {
+  0% {
+    opacity: 0;
+            color: white;
+            transform-origin: 50% 50%;
+            transform: scale(1.5,1.5);
+            filter: blur(2px);
+  }
+
+  100% {
+    opacity: 1;
+    color: white;
+            transform-origin: 50% 50%;
+            transform: scale(1,1);
+            filter: blur(0px);
+}
+
+@keyframes color-change {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}

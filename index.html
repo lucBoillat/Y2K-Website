@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <title>three.js webgl - postprocessing - afterimage</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="animations.css">
+  </head>
+  <body>
+    <div class="">
+      <div class="scroller-top"></div>
+      <div class="spinning-circle"></div>
+      <div class="top-title">This kinda</div>
+      <div class="bottom-title">looks like a PS2</div>
+      <div class="episode">menu, doesn't it?</div>
+      <div class="subtitle">My computer is on fire, pls help!</div>
+    </div>
+
+
+    <script src="three.js"></script>
+    <script src="js/controls/OrbitControls.js"></script>
+    <script src="js/shaders/CopyShader.js"></script>
+    <script src="js/shaders/AfterimageShader.js"></script>
+
+    <script src="js/postprocessing/EffectComposer.js"></script>
+    <script src="js/postprocessing/RenderPass.js"></script>
+    <script src="js/postprocessing/MaskPass.js"></script>
+    <script src="js/postprocessing/ShaderPass.js"></script>
+    <script src="js/postprocessing/AfterimagePass.js"></script>
+
+    <script src="js/libs/dat.gui.min.js" type="text/javascript" charset="utf-8"></script>
+
+    <script src="main.js" charset="utf-8"></script>
+  </body>
+</html>

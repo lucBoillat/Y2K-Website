@@ -1,0 +1,42 @@
+@font-face {font-family: 'ZrnicRg-Regular';src: url('webfonts/38AC60_0_0.eot');src: url('webfonts/38AC60_0_0.eot?#iefix') format('embedded-opentype'),url('webfonts/38AC60_0_0.woff2') format('woff2'),url('webfonts/38AC60_0_0.woff') format('woff'),url('webfonts/38AC60_0_0.ttf') format('truetype');}
+
+
+html, body {
+	background-color: #000;
+  font-family: TimesNewRoman, Times New Roman, Times, serif;
+  font-size: 100px;
+  letter-spacing: -7px;
+  font-style: italic;
+  margin: 0px;
+  overflow: hidden;
+  color: white;
+}
+.top-title {
+  font-size: 150px;
+  position: fixed;
+  top: 400px;
+  left: 70px;
+
+}
+.bottom-title {
+  font-size: 150px;
+  position: fixed;
+  top: 520px;
+  left: 70px;
+}
+
+.episode {
+  font-size: 70px;
+  font-style: normal;
+  position: fixed;
+  top: 670px;
+  left: 70px;
+}
+
+.subtitle {
+  font-size: 80px;
+  font-weight: lighter;
+  position: fixed;
+  top: 740px;
+  left: 200px;
+}
