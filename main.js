@@ -1,21 +1,26 @@
-var parent, renderer, scene, camera, controls, composer, mesh, light, afterimagePass;
+var parent, renderer, scene, camera, controls, composer, mesh, light, afterimagePass, glitchPass;
 var params = {
   enable: true
 };
-var inititalYPos = 20
+var easeConst = 0.16
 
 init();
 createGUI();
-
 animate();
 
 function init() {
 
 	// renderer
   renderer = new THREE.WebGLRenderer();
+  /* Full Res Rendering
   renderer.setPixelRatio( window.devicePixelRatio );
-	renderer.setSize( window.innerWidth, window.innerHeight );
+	renderer.setSize( window.innerWidth, window.innerHeight, true);
 	document.body.appendChild( renderer.domElement );
+  */
+  renderer.setSize( window.innerWidth / 3, window.innerHeight / 3 );
+  document.body.appendChild( renderer.domElement );
+  renderer.domElement.style.width = renderer.domElement.width * 3 + 'px';
+  renderer.domElement.style.height = renderer.domElement.height * 3 + 'px';
 
   // camera
 	camera = new THREE.PerspectiveCamera( 40, window.innerWidth / window.innerHeight, 1, 100 );
@@ -35,81 +40,46 @@ function init() {
 	//scene.add( new THREE.AxisHelper( 20 ) );
 
   // geometry
-  //var geometry = new THREE.BoxGeometry( 2, 2, 2 );
-  var geometry = new THREE.SphereGeometry( 0.7, 12, 12 );
+  //var geometry = new THREE.BoxGeometry( 1, 1, 1 );
+  var geometry = new THREE.SphereGeometry( 0.6, 12, 12 );
 
   // material
-  // TODO: make white solid
   var material = new THREE.MeshBasicMaterial( {
-    color: 0xffffff,
+    color: 0xccccff,
     wireframe: false
   } );
 
   // parent
   parent = new THREE.Object3D();
   scene.add( parent );
-
-  // pivots
-  var pivot1 = new THREE.Object3D();
-  var pivot2 = new THREE.Object3D();
-  var pivot3 = new THREE.Object3D();
-  var pivot4 = new THREE.Object3D();
-  var pivot5 = new THREE.Object3D();
-  var pivot6 = new THREE.Object3D();
-  var pivot7 = new THREE.Object3D();
-  pivot1.rotation.z = 0;
-  pivot2.rotation.z = 2 * Math.PI / 7;
-  pivot3.rotation.z = 4 * Math.PI / 7;
-  pivot4.rotation.z = 6 * Math.PI / 7;
-  pivot5.rotation.z = 8 * Math.PI / 7;
-  pivot6.rotation.z = 10 * Math.PI / 7;
-  pivot7.rotation.z = 12 * Math.PI / 7;
-
-  parent.add( pivot1 );
-  parent.add( pivot2 );
-  parent.add( pivot3 );
-  parent.add( pivot4 );
-  parent.add( pivot5 );
-  parent.add( pivot6 );
-  parent.add( pivot7 );
-
-  // mesh
-  var mesh1 = new THREE.Mesh( geometry, material );
-  var mesh2 = new THREE.Mesh( geometry, material );
-  var mesh3 = new THREE.Mesh( geometry, material );
-  var mesh4 = new THREE.Mesh( geometry, material );
-  var mesh5 = new THREE.Mesh( geometry, material );
-  var mesh6 = new THREE.Mesh( geometry, material );
-  var mesh7 = new THREE.Mesh( geometry, material );
-  mesh1.position.y = 20;
-  mesh2.position.y = 20;
-  mesh3.position.y = 20;
-  mesh4.position.y = 20;
-  mesh5.position.y = 20;
-  mesh6.position.y = 20;
-  mesh7.position.y = 20;
-  pivot1.add( mesh1 );
-  pivot2.add( mesh2 );
-  pivot3.add( mesh3 );
-  pivot4.add( mesh4 );
-  pivot5.add( mesh5 );
-  pivot6.add( mesh6 );
-  pivot7.add( mesh7 );
-
   parent.position.set(10, 0, 0);
 
 
-  scene.add( new THREE.AmbientLight( 0x222222 ) );
-  light = new THREE.DirectionalLight( 0xffffff );
-  light.position.set( 1, 1, 1 );
-  scene.add( light );
+  //create spheres and add to parent
+  let zPos = 0
+  for (let i = 0; i < 7; i++) {
+    let pivot = new THREE.Object3D();
+    pivot.rotation.z = zPos * Math.PI / 7;
+    parent.add(pivot)
 
+    let mesh = new THREE.Mesh( geometry, material );
+    mesh.position.y = 20;
+    pivot.add( mesh );
+
+    zPos += 2;
+  }
+
+  //Post Processing
   composer = new THREE.EffectComposer( renderer );
   composer.addPass( new THREE.RenderPass( scene, camera ) );
 
   afterimagePass = new THREE.AfterimagePass();
-  afterimagePass.renderToScreen = true;
+  //afterimagePass.renderToScreen = true;
   composer.addPass( afterimagePass );
+
+  glitchPass = new THREE.GlitchPass();
+  glitchPass.renderToScreen = true;
+  composer.addPass( glitchPass );
 
   window.addEventListener( 'resize', onWindowResize, false );
 }
@@ -142,18 +112,22 @@ function animate() {
   parent.children[5].rotation.z -= 0.025
   parent.children[6].rotation.z -= 0.028
 
-  if(inititalYPos > 5) {
-    parent.children[0].children[0].position.y -= 0.15
-    parent.children[1].children[0].position.y -= 0.15
-    parent.children[2].children[0].position.y -= 0.15
-    parent.children[3].children[0].position.y -= 0.15
-    parent.children[4].children[0].position.y -= 0.15
-    parent.children[5].children[0].position.y -= 0.15
-    parent.children[6].children[0].position.y -= 0.15
+  if(parent.children[0].children[0].position.y > 5) {
+    parent.children[0].children[0].position.y -= easeConst
+    parent.children[1].children[0].position.y -= easeConst
+    parent.children[2].children[0].position.y -= easeConst
+    parent.children[3].children[0].position.y -= easeConst
+    parent.children[4].children[0].position.y -= easeConst
+    parent.children[5].children[0].position.y -= easeConst
+    parent.children[6].children[0].position.y -= easeConst
 
-    inititalYPos -= 0.15
-    console.log(parent.children[0].position.y);
   }
+
+  if(easeConst>0.06) {
+    easeConst -= 0.001
+  }
+  console.log(easeConst);
+  //console.log(parent.children[0].children[0].position.y);
 
 	controls.update();
 
