@@ -10,7 +10,7 @@ THREE.AfterimageShader = {
 
 	uniforms: {
 
-		"damp": { value: 0.8 },
+		"damp": { value: 0.7 },
 		"tOld": { value: null },
 		"tNew": { value: null }
 
@@ -47,9 +47,9 @@ THREE.AfterimageShader = {
 		"void main() {",
 
 			"vec4 texelOld = texture2D( tOld, vUv );",
-			"vec4 texelNew = texture2D( tNew, vUv );",
+			"vec4 texelNew = texture2D( tNew, vUv ) ;",
 
-			"texelOld *= damp * when_gt( texelOld, 0.1 );",
+			"texelOld *= damp * when_gt( texelOld, 0.01 );",
 
 			"gl_FragColor = max(texelNew, texelOld);",
 

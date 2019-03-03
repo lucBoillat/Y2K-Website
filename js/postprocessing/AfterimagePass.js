@@ -13,7 +13,7 @@ THREE.AfterimagePass = function ( damp ) {
 
 	this.uniforms = THREE.UniformsUtils.clone( this.shader.uniforms );
 
-	this.uniforms[ "damp" ].value = damp !== undefined ? damp : 0.8;
+	this.uniforms[ "damp" ].value = damp !== undefined ? damp : 0.7;
 
 	this.textureComp = new THREE.WebGLRenderTarget( window.innerWidth, window.innerHeight, {
 

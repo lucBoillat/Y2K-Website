@@ -45,7 +45,7 @@ function init() {
 
   // material
   var material = new THREE.MeshBasicMaterial( {
-    color: 0xccccff,
+    color: 0xffffff,
     wireframe: false
   } );
 
@@ -85,6 +85,7 @@ function init() {
 }
 
 function onWindowResize() {
+  // TODO: scale on resize
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize( window.innerWidth, window.innerHeight );
@@ -126,7 +127,7 @@ function animate() {
   if(easeConst>0.06) {
     easeConst -= 0.001
   }
-  console.log(easeConst);
+  //console.log(easeConst);
   //console.log(parent.children[0].children[0].position.y);
 
 	controls.update();
