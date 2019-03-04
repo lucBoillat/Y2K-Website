@@ -1,9 +1,10 @@
-var parent, cubeMesh, renderer, scene, camera, controls, composer, mesh, light, afterimagePass, glitchPass;
+var parent, cylinderParent, cubeMesh, renderer, scene, camera, controls, composer, mesh, light, afterimagePass, glitchPass;
 var params = {
-  enable: true
+  enable: false
 };
 var easeConst = 0.16
-const stretchFactor = 4
+var easeConstCyl = 0.01
+const stretchFactor = 1
 
 init();
 createGUI();
@@ -39,6 +40,7 @@ function init() {
 
   // geometry
   var geometry = new THREE.SphereGeometry(0.6, 12, 12);
+  var cylinderGeometry = new THREE.CylinderGeometry(1, 1, 10, 6);
 
   // material
   var materialCube = new THREE.MeshBasicMaterial({
@@ -51,10 +53,29 @@ function init() {
   });
 
   //BG cube
+  /*
   var cubeGeometry = new THREE.BoxGeometry(17, 17, 17);
   cubeMesh = new THREE.Mesh(cubeGeometry, materialCube);
   scene.add(cubeMesh)
   cubeMesh.position.set(-10, 0, 0)
+  */
+
+  cylinderParent = new THREE.Object3D();
+  scene.add(cylinderParent)
+  cylinderParent.position.set(-10, 0, 0)
+
+  let zPosCyl = 0
+  for (let i = 0; i < 12; i++) {
+    let pivot = new THREE.Object3D();
+    pivot.rotation.z = zPosCyl * Math.PI / 12;
+    cylinderParent.add(pivot)
+
+    let mesh = new THREE.Mesh(cylinderGeometry, materialCube);
+    mesh.position.y = 12;
+    pivot.add(mesh);
+
+    zPosCyl += 2;
+  }
 
   // parent
   parent = new THREE.Object3D();
@@ -113,8 +134,41 @@ function createGUI() {
 function animate() {
 
   requestAnimationFrame(animate);
-  cubeMesh.rotation.z += 0.005;
-  cubeMesh.rotation.x += 0.005;
+  //cubeMesh.rotation.z += 0.005;
+  //cubeMesh.rotation.x += 0.005;
+
+  cylinderParent.rotation.y += 0.003
+  //cylinderParent.rotation.z += 0.001
+
+  cylinderParent.children[0].children[0].rotation.y += 0.004
+  cylinderParent.children[1].children[0].rotation.y += 0.004
+  cylinderParent.children[2].children[0].rotation.y += 0.004
+  cylinderParent.children[3].children[0].rotation.y += 0.004
+  cylinderParent.children[4].children[0].rotation.y += 0.004
+  cylinderParent.children[5].children[0].rotation.y += 0.004
+  cylinderParent.children[6].children[0].rotation.y += 0.004
+  cylinderParent.children[7].children[0].rotation.y += 0.004
+  cylinderParent.children[8].children[0].rotation.y += 0.004
+  cylinderParent.children[9].children[0].rotation.y += 0.004
+  cylinderParent.children[10].children[0].rotation.y += 0.004
+  cylinderParent.children[11].children[0].rotation.y += 0.004
+
+  if (cylinderParent.children[0].children[0].position.y > 11) {
+    cylinderParent.children[0].children[0].position.y -= easeConstCyl
+    cylinderParent.children[1].children[0].position.y -= easeConstCyl
+    cylinderParent.children[2].children[0].position.y -= easeConstCyl
+    cylinderParent.children[3].children[0].position.y -= easeConstCyl
+    cylinderParent.children[4].children[0].position.y -= easeConstCyl
+    cylinderParent.children[5].children[0].position.y -= easeConstCyl
+    cylinderParent.children[6].children[0].position.y -= easeConstCyl
+    cylinderParent.children[7].children[0].position.y -= easeConstCyl
+    cylinderParent.children[8].children[0].position.y -= easeConstCyl
+    cylinderParent.children[9].children[0].position.y -= easeConstCyl
+    cylinderParent.children[10].children[0].position.y -= easeConstCyl
+    cylinderParent.children[11].children[0].position.y -= easeConstCyl
+  }
+
+
   parent.rotation.z += 0.06;
   parent.rotation.x += 0.02;
 

@@ -93,5 +93,6 @@ html, body {
 }
 
 .text-foreground {
-  animation: fadein 3s;}
+	display: none
+  /* animation: fadein 3s;} */
 }
