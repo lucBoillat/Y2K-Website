@@ -7,7 +7,6 @@ canvas {
 html, body {
 	height: 100%;
 	width: 100%;
-	background-color: #000;
   font-family: TimesNewRoman, Times New Roman, Times, serif;
   font-size: 100px;
   letter-spacing: -7px;
@@ -15,9 +14,24 @@ html, body {
   margin: 0px;
   overflow: hidden;
   color: white;
+
+  background-color: #1A8FCF;
+  background-image: -webkit-gradient(#1A8FCF,#D1236A,#1A8FCF);
+  /* Safari 5.1, iOS 5.0-6.1, Chrome 10-25, Android 4.0-4.3 */
+  background-image: -webkit-radial-gradient(farthest-corner at 20% 20%, purple, black);
+  background-image: radial-gradient(ellipse at bottom,
+    #330033 0%, black 100%);
+  /* Firefox 3.6 - 15 */
+  /*
+  background-image: -moz-linear-gradient(#1A8FCF,#D1236A,#1A8FCF);
+  /* Opera 11.1 - 12 */
+  /*background-image: -o-linear-gradient(#1A8FCF,#D1236A,#1A8FCF); */
+  /* Opera 15+, Chrome 25+, IE 10+, Firefox 16+, Safari 6.1+, iOS 7+, Android 4.4+ */
+  /*background-image: linear-gradient(#1A8FCF,#D1236A,#1A8FCF); */
 }
+
 .top-title {
-  font-size: 150px;
+  font-size: 12vw;
   position: fixed;
   top: 45%;
   left: 3%;
@@ -27,14 +41,14 @@ html, body {
 	text-shadow: 1px 1px 20px cyan;
 }
 .bottom-title {
-  font-size: 150px;
+  font-size: 12vw;
   position: fixed;
   top: 56%;
   left: 3%;
 }
 
 .episode {
-  font-size: 70px;
+  font-size: 6vw;
   font-style: normal;
   position: fixed;
   top: 70%;
@@ -42,7 +56,7 @@ html, body {
 }
 
 .subtitle {
-  font-size: 80px;
+  font-size: 7vw;
   font-weight: lighter;
   position: fixed;
   top: 80%;
