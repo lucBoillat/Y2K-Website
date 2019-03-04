@@ -140,7 +140,7 @@ function animate() {
   rodParent.rotation.y += 0.003
 
   for (var i = 0; i < rodParent.children.length; i++) {
-    rodParent.children[i].children[0].rotation.y += 0.004
+    rodParent.children[i].children[0].rotation.y += 0.005
   }
 
   if (rodParent.children[0].children[0].position.y > 11) {
