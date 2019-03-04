@@ -1,25 +1,33 @@
-var parent, cylinderParent, cubeMesh, renderer, scene, camera, controls, composer, mesh, light, afterimagePass, glitchPass;
-var params = {
+let renderer, scene, camera, composer, controls;
+let cubeMesh, mesh;
+let light;
+let afterimagePass, glitchPass;
+
+let params = {
   enable: false
 };
-var easeConst = 0.16
-var easeConstCyl = 0.01
+
+let sphereDeltaY = 0.16
+let rodDeltaY = 0.01
 const stretchFactor = 1
 
-init();
+initializeScene();
+initializeObjects();
+initializeShaders();
 createGUI();
 animate();
 
-function init() {
-
+function initializeScene() {
   // renderer
-  renderer = new THREE.WebGLRenderer( {alpha: true});
-  renderer.setClearColor( 0x000000, 0 );
+  renderer = new THREE.WebGLRenderer({
+    alpha: true
+  });
+  renderer.setClearColor(0x000000, 0);
 
   renderer.setSize(window.innerWidth / stretchFactor, window.innerHeight / stretchFactor);
-  document.body.appendChild(renderer.domElement);
   renderer.domElement.style.width = renderer.domElement.width * stretchFactor + 'px';
   renderer.domElement.style.height = renderer.domElement.height * stretchFactor + 'px';
+  document.body.appendChild(renderer.domElement);
 
   // camera
   camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 100);
@@ -30,7 +38,6 @@ function init() {
   scene.fog = new THREE.Fog(0x000000, 1, 1000);
 
   // controls
-
   controls = new THREE.OrbitControls(camera);
   controls.minDistance = 10;
   controls.maxDistance = 50;
@@ -38,16 +45,20 @@ function init() {
   // axes
   //scene.add( new THREE.AxisHelper( 20 ) );
 
-  // geometry
-  var geometry = new THREE.SphereGeometry(0.6, 12, 12);
+  window.addEventListener('resize', onWindowResize, false);
+}
+
+function initializeObjects() {
+  // geometries
+  var sphereGeometry = new THREE.SphereGeometry(0.6, 12, 12);
   var cylinderGeometry = new THREE.CylinderGeometry(1, 1, 10, 6);
 
-  // material
-  var materialCube = new THREE.MeshBasicMaterial({
+  // materials
+  var wireframeMaterial = new THREE.MeshBasicMaterial({
     color: 0x777777,
     wireframe: true
   });
-  var material = new THREE.MeshBasicMaterial({
+  var solidMaterial = new THREE.MeshBasicMaterial({
     color: 0xffffff,
     wireframe: false
   });
@@ -55,49 +66,34 @@ function init() {
   //BG cube
   /*
   var cubeGeometry = new THREE.BoxGeometry(17, 17, 17);
-  cubeMesh = new THREE.Mesh(cubeGeometry, materialCube);
+  cubeMesh = new THREE.Mesh(cubeGeometry, wireframeMaterial);
   scene.add(cubeMesh)
   cubeMesh.position.set(-10, 0, 0)
   */
+  createOrbitingObject(12, 12, cylinderGeometry, wireframeMaterial, -10)
+  createOrbitingObject(7, 20, sphereGeometry, solidMaterial, 10)
 
-  cylinderParent = new THREE.Object3D();
-  scene.add(cylinderParent)
-  cylinderParent.position.set(-10, 0, 0)
+  function createOrbitingObject(nrObjects, parentSpacing, geometry, material, xPosition) {
+    parent = new THREE.Object3D();
+    scene.add(parent)
+    parent.position.set(xPosition, 0, 0)
 
-  let zPosCyl = 0
-  for (let i = 0; i < 12; i++) {
-    let pivot = new THREE.Object3D();
-    pivot.rotation.z = zPosCyl * Math.PI / 12;
-    cylinderParent.add(pivot)
+    let zPos = 0
+    for (let i = 0; i < nrObjects; i++) {
+      let pivot = new THREE.Object3D();
+      pivot.rotation.z = zPos * Math.PI / nrObjects;
+      parent.add(pivot)
 
-    let mesh = new THREE.Mesh(cylinderGeometry, materialCube);
-    mesh.position.y = 12;
-    pivot.add(mesh);
+      let mesh = new THREE.Mesh(geometry, material);
+      mesh.position.y = parentSpacing;
+      pivot.add(mesh);
 
-    zPosCyl += 2;
+      zPos += 2;
+    }
   }
+}
 
-  // parent
-  parent = new THREE.Object3D();
-  scene.add(parent);
-  parent.position.set(10, 0, 0);
-
-
-  //create spheres and add to parent
-  let zPos = 0
-  for (let i = 0; i < 7; i++) {
-    let pivot = new THREE.Object3D();
-    pivot.rotation.z = zPos * Math.PI / 7;
-    parent.add(pivot)
-
-    let mesh = new THREE.Mesh(geometry, material);
-    mesh.position.y = 20;
-    pivot.add(mesh);
-
-    zPos += 2;
-  }
-
-  //Post Processing
+function initializeShaders() {
   composer = new THREE.EffectComposer(renderer);
   composer.addPass(new THREE.RenderPass(scene, camera));
 
@@ -108,8 +104,6 @@ function init() {
   glitchPass = new THREE.GlitchPass();
   glitchPass.renderToScreen = true;
   composer.addPass(glitchPass);
-
-  window.addEventListener('resize', onWindowResize, false);
 }
 
 function onWindowResize() {
@@ -136,66 +130,39 @@ function animate() {
   requestAnimationFrame(animate);
   //cubeMesh.rotation.z += 0.005;
   //cubeMesh.rotation.x += 0.005;
+  let rodParent = scene.children[0]
+  let sphereParent = scene.children[1]
 
-  cylinderParent.rotation.y += 0.003
-  //cylinderParent.rotation.z += 0.001
+  rodParent.rotation.y += 0.003
 
-  cylinderParent.children[0].children[0].rotation.y += 0.004
-  cylinderParent.children[1].children[0].rotation.y += 0.004
-  cylinderParent.children[2].children[0].rotation.y += 0.004
-  cylinderParent.children[3].children[0].rotation.y += 0.004
-  cylinderParent.children[4].children[0].rotation.y += 0.004
-  cylinderParent.children[5].children[0].rotation.y += 0.004
-  cylinderParent.children[6].children[0].rotation.y += 0.004
-  cylinderParent.children[7].children[0].rotation.y += 0.004
-  cylinderParent.children[8].children[0].rotation.y += 0.004
-  cylinderParent.children[9].children[0].rotation.y += 0.004
-  cylinderParent.children[10].children[0].rotation.y += 0.004
-  cylinderParent.children[11].children[0].rotation.y += 0.004
-
-  if (cylinderParent.children[0].children[0].position.y > 11) {
-    cylinderParent.children[0].children[0].position.y -= easeConstCyl
-    cylinderParent.children[1].children[0].position.y -= easeConstCyl
-    cylinderParent.children[2].children[0].position.y -= easeConstCyl
-    cylinderParent.children[3].children[0].position.y -= easeConstCyl
-    cylinderParent.children[4].children[0].position.y -= easeConstCyl
-    cylinderParent.children[5].children[0].position.y -= easeConstCyl
-    cylinderParent.children[6].children[0].position.y -= easeConstCyl
-    cylinderParent.children[7].children[0].position.y -= easeConstCyl
-    cylinderParent.children[8].children[0].position.y -= easeConstCyl
-    cylinderParent.children[9].children[0].position.y -= easeConstCyl
-    cylinderParent.children[10].children[0].position.y -= easeConstCyl
-    cylinderParent.children[11].children[0].position.y -= easeConstCyl
+  for (var i = 0; i < rodParent.children.length; i++) {
+    rodParent.children[i].children[0].rotation.y += 0.004
   }
 
-
-  parent.rotation.z += 0.06;
-  parent.rotation.x += 0.02;
-
-  parent.children[0].rotation.z -= 0.01
-  parent.children[1].rotation.z -= 0.013
-  parent.children[2].rotation.z -= 0.016
-  parent.children[3].rotation.z -= 0.019
-  parent.children[4].rotation.z -= 0.022
-  parent.children[5].rotation.z -= 0.025
-  parent.children[6].rotation.z -= 0.028
-
-  if (parent.children[0].children[0].position.y > 5) {
-    parent.children[0].children[0].position.y -= easeConst
-    parent.children[1].children[0].position.y -= easeConst
-    parent.children[2].children[0].position.y -= easeConst
-    parent.children[3].children[0].position.y -= easeConst
-    parent.children[4].children[0].position.y -= easeConst
-    parent.children[5].children[0].position.y -= easeConst
-    parent.children[6].children[0].position.y -= easeConst
-
+  if (rodParent.children[0].children[0].position.y > 11) {
+    for (var i = 0; i < rodParent.children.length; i++) {
+      rodParent.children[i].children[0].position.y -= rodDeltaY
+    }
   }
 
-  if (easeConst > 0.06) {
-    easeConst -= 0.001
+  sphereParent.rotation.z += 0.06;
+  sphereParent.rotation.x += 0.02;
+
+  let zRotation = 0.01
+  for (var i = 0; i < sphereParent.children.length; i++) {
+    sphereParent.children[i].rotation.z -= zRotation
+    zRotation += 0.003
   }
-  //console.log(easeConst);
-  //console.log(parent.children[0].children[0].position.y);
+
+  if (sphereParent.children[0].children[0].position.y > 5) {
+    for (var i = 0; i < sphereParent.children.length; i++) {
+      sphereParent.children[i].children[0].position.y -= sphereDeltaY
+    }
+  }
+
+  if (sphereDeltaY > 0.06) {
+    sphereDeltaY -= 0.001
+  }
 
   controls.update();
 
