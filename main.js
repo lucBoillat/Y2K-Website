@@ -45,6 +45,10 @@ function initializeScene() {
   // axes
   //scene.add( new THREE.AxisHelper( 20 ) );
 
+  //Stats
+  stats = new Stats();
+	document.body.appendChild( stats.dom );
+
   window.addEventListener('resize', onWindowResize, false);
 }
 
@@ -70,8 +74,8 @@ function initializeObjects() {
   scene.add(cubeMesh)
   cubeMesh.position.set(-10, 0, 0)
   */
-  createOrbitingObject(12, 12, cylinderGeometry, wireframeMaterial, -10)
-  createOrbitingObject(7, 20, sphereGeometry, solidMaterial, 10)
+  createOrbitingObject(12, 12, cylinderGeometry, wireframeMaterial, 0)
+  createOrbitingObject(7, 20, sphereGeometry, solidMaterial, 0)
 
   function createOrbitingObject(nrObjects, parentSpacing, geometry, material, xPosition) {
     parent = new THREE.Object3D();
@@ -164,6 +168,7 @@ function animate() {
     sphereDeltaY -= 0.001
   }
 
+  stats.update();
   controls.update();
 
   if (params.enable) {
