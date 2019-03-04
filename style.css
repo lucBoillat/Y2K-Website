@@ -47,9 +47,8 @@ html, body {
   background-color: #1A8FCF;
   background-image: -webkit-gradient(#1A8FCF,#D1236A,#1A8FCF);
   /* Safari 5.1, iOS 5.0-6.1, Chrome 10-25, Android 4.0-4.3 */
-  background-image: -webkit-radial-gradient(farthest-corner at 20% 20%, purple, black);
-  background-image: radial-gradient(ellipse at bottom,
-    #330033 0%, black 100%);
+  /* background-image: -webkit-radial-gradient(farthest-corner at 20% 20%, purple, black); */
+  background-image: radial-gradient(ellipse at bottom, #440066 0%, black 150%);
   /* Firefox 3.6 - 15 */
   /*
   background-image: -moz-linear-gradient(#1A8FCF,#D1236A,#1A8FCF);
@@ -57,6 +56,7 @@ html, body {
   /*background-image: -o-linear-gradient(#1A8FCF,#D1236A,#1A8FCF); */
   /* Opera 15+, Chrome 25+, IE 10+, Firefox 16+, Safari 6.1+, iOS 7+, Android 4.4+ */
   /*background-image: linear-gradient(#1A8FCF,#D1236A,#1A8FCF); */
+
 }
 
 .top-title {
@@ -90,4 +90,8 @@ html, body {
   position: fixed;
   top: 80%;
 	left: 8%;
+}
+
+.text-foreground {
+  animation: fadein 3s;}
 }
