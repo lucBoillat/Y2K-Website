@@ -43,12 +43,10 @@ html, body {
   margin: 0px;
   overflow: hidden;
   color: white;
-
-  background-color: #1A8FCF;
-  background-image: -webkit-gradient(#1A8FCF,#D1236A,#1A8FCF);
+	background-color: black
   /* Safari 5.1, iOS 5.0-6.1, Chrome 10-25, Android 4.0-4.3 */
   /* background-image: -webkit-radial-gradient(farthest-corner at 20% 20%, purple, black); */
-  background-image: radial-gradient(ellipse at bottom, #440088 0%, black 150%);
+  /* background-image: radial-gradient(ellipse at bottom, #440088 0%, black 150%); */
   /* Firefox 3.6 - 15 */
   /*
   background-image: -moz-linear-gradient(#1A8FCF,#D1236A,#1A8FCF);

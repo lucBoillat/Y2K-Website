@@ -1,11 +1,12 @@
 let renderer, scene, camera, composer, controls;
 let cubeMesh, mesh;
-let light;
+//let pointLight;
 let afterimagePass, glitchPass;
 
 let params = {
   enable: false
 };
+var refractSphere, refractSphereCamera; // for refract material
 
 let sphereDeltaY = 0.16
 let rodDeltaY = 0.01
@@ -13,6 +14,7 @@ const stretchFactor = 1
 
 initializeScene();
 initializeObjects();
+initializeLights();
 initializeShaders();
 createGUI();
 animate();
@@ -31,7 +33,7 @@ function initializeScene() {
 
   // camera
   camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 100);
-  camera.position.set(0, 0, 35);
+  camera.position.set(0, 0, 50);
 
   // scene
   scene = new THREE.Scene();
@@ -66,6 +68,7 @@ function initializeObjects() {
     color: 0xffffff,
     wireframe: false
   });
+  var coloredMaterial = new THREE.MeshPhongMaterial( { color: 0xaaaaaa, specular: 0xffffff, emissive: 0x004499, shininess: 100, opacity: 0.5, transparent: true } )
 
   //BG cube
   /*
@@ -74,10 +77,12 @@ function initializeObjects() {
   scene.add(cubeMesh)
   cubeMesh.position.set(-10, 0, 0)
   */
-  createOrbitingObject(12, 12, cylinderGeometry, wireframeMaterial, 0)
-  createOrbitingObject(7, 20, sphereGeometry, solidMaterial, 0)
+  createOrbitingObject(12, 12, cylinderGeometry, coloredMaterial, 0, false)
+  createOrbitingObject(7, 20, sphereGeometry, solidMaterial, 0, true)
 
-  function createOrbitingObject(nrObjects, parentSpacing, geometry, material, xPosition) {
+
+
+  function createOrbitingObject(nrObjects, parentSpacing, geometry, material, xPosition, lightBool) {
     parent = new THREE.Object3D();
     scene.add(parent)
     parent.position.set(xPosition, 0, 0)
@@ -88,6 +93,12 @@ function initializeObjects() {
       pivot.rotation.z = zPos * Math.PI / nrObjects;
       parent.add(pivot)
 
+      if (lightBool) {
+        pointLight = new THREE.PointLight( 0xffffff, 1, 15, 1 );
+        pointLight.position.y = parentSpacing
+        pivot.add(pointLight)
+      }
+
       let mesh = new THREE.Mesh(geometry, material);
       mesh.position.y = parentSpacing;
       pivot.add(mesh);
@@ -97,17 +108,21 @@ function initializeObjects() {
   }
 }
 
+function initializeLights() {
+  scene.add( new THREE.AmbientLight( 0x111111 ) );
+}
+
 function initializeShaders() {
   composer = new THREE.EffectComposer(renderer);
   composer.addPass(new THREE.RenderPass(scene, camera));
 
   afterimagePass = new THREE.AfterimagePass();
-  //afterimagePass.renderToScreen = true;
+  afterimagePass.renderToScreen = true;
   composer.addPass(afterimagePass);
 
   glitchPass = new THREE.GlitchPass();
   glitchPass.renderToScreen = true;
-  composer.addPass(glitchPass);
+  //composer.addPass(glitchPass);
 }
 
 function onWindowResize() {
@@ -132,8 +147,10 @@ function createGUI() {
 function animate() {
 
   requestAnimationFrame(animate);
+
   //cubeMesh.rotation.z += 0.005;
   //cubeMesh.rotation.x += 0.005;
+
   let rodParent = scene.children[0]
   let sphereParent = scene.children[1]
 
@@ -161,8 +178,10 @@ function animate() {
   if (sphereParent.children[0].children[0].position.y > 5) {
     for (var i = 0; i < sphereParent.children.length; i++) {
       sphereParent.children[i].children[0].position.y -= sphereDeltaY
+      sphereParent.children[i].children[1].position.y -= sphereDeltaY
     }
   }
+
 
   if (sphereDeltaY > 0.06) {
     sphereDeltaY -= 0.001
